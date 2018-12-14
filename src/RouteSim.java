@@ -108,6 +108,29 @@ public class RouteSim {
 			System.out.println(" ");
 		}
 	}
+	
+	
+	public int distanceVectorRouting(Node from, Node destination) {
+		/**
+		 * dxY  = min{cxv + dvy} --- d here is the min of the costs
+		 */
+		
+		
+		
+		
+		return -1;
+	}
+	
+	public int c(Node node, Node neighbor) {
+		
+		return -1;
+	}
+	
+	public int d(Node neighbor, Node destination) {
+		
+		
+		return -1;
+	}
 
 
 }
