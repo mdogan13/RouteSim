@@ -34,6 +34,7 @@ public class Node {
 	public void receiveUpdate(Message m) {
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
+		System.out.println("Message received: "+m.toString());
 
 	}
 
@@ -50,10 +51,13 @@ public class Node {
 			
 			ArrayList<Node> neighbors = this.getNeighbors();
 			for(Node n: neighbors) {
-				int[] distVect = n.getDistanceTable()[n.getNodeID()];
+				int[] distVect = this.getDistanceTable()[this.getNodeID()];
+				//System.out.println(Arrays.toString(distVect));
 				Message m = new Message(this.getNodeID(),n.getNodeID(),distVect);
+				System.out.println(m.toString());
 				n.receiveUpdate(m);
 			}
+			return true;
 		}
 		
 		

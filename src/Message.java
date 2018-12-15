@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Message {
 	//Variables-------------------------------------------
@@ -22,5 +23,8 @@ public class Message {
 	}
 	public int getReceiverID() {
 		return this.receiverID;
+	}
+	public String toString() {
+		return "Sender ID: "+this.senderID+" Receiver ID: "+this.receiverID+" Content: "+Arrays.toString(this.distanceVector);
 	}
 }

@@ -20,6 +20,12 @@ public class RouteSim {
 		this.createTopology();
 		this.initializeDistanceTables();
 		this.printDistanceTables();
+		System.out.println("Communication starts: ");
+		for(Node n: topology) {
+			n.sendUpdate();
+			
+		}
+		printDistanceTables();
 	}
 
 	public static ArrayList<String> readText(String filename) throws FileNotFoundException, IOException {
