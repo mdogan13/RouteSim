@@ -27,20 +27,18 @@ public class Node {
 
 	/**
 	 * @param m Message created by sender
-	 * 
 	 * It modifies a row of the distance table of the receiver node to the vector inside the message.
-	 * 
 	 */
 	public void receiveUpdate(Message m) {
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
-		System.out.println("Message received: "+m.toString());
+		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
+		process();
 
 	}
 
 	/**
 	 * Sends messages to the neighbor rows when needed
-	 * 
 	 * @return
 	 */
 	public boolean sendUpdate() {
@@ -61,6 +59,47 @@ public class Node {
 		}
 		
 		
+		return false;
+	}
+	
+	
+	/***
+	 * Processes the table after an update
+	 * @return
+	 */
+	public boolean process() {
+		
+		
+		int[][] distTable = this.getDistanceTable();
+		int[] distVect = this.getDistanceTable()[this.getNodeID()];
+		boolean changed = false;
+		
+		for(int i = 0; i<distVect.length; i++) {
+			int pointer = 0;
+			int oldDist = distVect[i];
+			int newDist = 0;
+			for(int j = 0; j<distVect.length;j++) {
+				
+				int c = distTable[this.getNodeID()][j];
+				int d = distTable[j][pointer];
+				
+				newDist = c+d;
+				
+				if(newDist<oldDist) {
+					distVect[i] = newDist;
+					oldDist = newDist;
+					changed = true;
+				}
+				pointer ++;
+			}
+			
+		}
+		
+		this.getDistanceTable()[this.getNodeID()]=distVect;
+		if(changed) {
+			this.sendUpdate();
+		}
+				
 		return false;
 	}
 
