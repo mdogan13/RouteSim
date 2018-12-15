@@ -16,7 +16,7 @@ public class RouteSim {
 	}
 
 	public void startSimulation() throws FileNotFoundException, IOException {
-		//Main algorithm
+		//Main algorithm.
 		this.createTopology();
 		this.initializeDistanceTables();
 		this.printDistanceTables();
