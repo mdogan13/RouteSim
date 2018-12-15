@@ -79,11 +79,9 @@ public class RouteSim {
 						//System.out.println("i j in else are "+nodeID+" "+j);
 						distanceTable[i][j]=999;
 					}
-
 				}
 			}
 		}
-
 	}
 
 
@@ -110,9 +108,27 @@ public class RouteSim {
 	}
 	
 	
+	
+	/**
+	 * ##########################################
+	 * ####### DISTANCE VECTOR ROUTING ########## 
+	 * ##########################################
+	 * 
+	 */
+	
+	
+	/***
+	 * Distance Vector Routing Algorithm implementation
+	 * 
+	 * From Node x to destination Node y
+	 * 
+	 * @param from
+	 * @param destination
+	 * @return
+	 */
 	public int distanceVectorRouting(Node from, Node destination) {
 		/**
-		 * dxY  = min{cxv + dvy} --- d here is the min of the costs
+		 * dxY  = min{cxv + dvy} --- d is the min of the costs
 		 */
 		
 		
@@ -121,16 +137,47 @@ public class RouteSim {
 		return -1;
 	}
 	
+	/***
+	 * Cost from Node node to its neighbor 
+	 * 
+	 * c(node, neighbor)
+	 * 
+	 * @param node
+	 * @param neighbor
+	 * @return
+	 */
 	public int c(Node node, Node neighbor) {
+		
+		
+		
+		
 		
 		return -1;
 	}
 	
+	/***
+	 * 
+	 * distance from neighbor Node of X to the destination Node y
+	 * 
+	 * d(neighbor, destination)
+	 * 
+	 * 
+	 * @param neighbor
+	 * @param destination
+	 * @return
+	 */
 	public int d(Node neighbor, Node destination) {
+		
+		
 		
 		
 		return -1;
 	}
-
+	/**
+	 * ##########################################
+	 * ########################################## 
+	 * ##########################################
+	 * 
+	 */
 
 }
