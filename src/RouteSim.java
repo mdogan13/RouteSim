@@ -12,7 +12,7 @@ public class RouteSim {
 	String filename;
 	static int NUM_OF_ITERATIONS;
 	static HashMap<Integer,int[][]> distanceTables;
-	int convergenceCounter;
+	static int convergenceCounter;
 
 	public RouteSim(String filename) {
 		this.filename=filename;
@@ -26,7 +26,7 @@ public class RouteSim {
 		this.printDistanceTables();
 		System.out.println("Communication starts: ");
 		
-			distanceVectorRouting();
+		distanceVectorRouting();
 		
 		
 		printDistanceTables();
@@ -131,57 +131,7 @@ public class RouteSim {
 		}
 	}
 	
-	
-//	public boolean tablesSynced() {
-//		int [][] prevDistTable = null;
-//		for(Node n : topology) {
-//			int [][] distTable = n.getDistanceTable();
-//			
-//			if(prevDistTable==null) {
-//				prevDistTable = distTable;
-//			}
-//			if(!Arrays.deepEquals(prevDistTable, distTable)) {
-//				return false;
-//			}
-//		}
-//		
-//		return true;
-//	}
-	
-	public boolean tablesChanged(int N) {
-		int counter =0 ;
-		for(Node n: topology) {
-			if(!tableChanged(n)) {
-				counter++;
-			}
-		}
-		//nothing changed
-		if(counter==topology.size()) {
-			convergenceCounter++;
-			return true;
-		}else {
-			//at least 1 table changed
-			convergenceCounter=0;
-			return false;
-		}
-		
-	}
-	
-	public boolean tableChanged(Node n) {
-		int[][] oldTable = this.distanceTables.get(n.getNodeID());
-		int[][] newTable = n.getDistanceTable();
-		if(Arrays.equals(oldTable, newTable)) {
-			System.out.println("NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED"+Arrays.deepToString(oldTable));
-			System.out.println("NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED_NOTCHANGED"+Arrays.deepToString(newTable));
-			return false;
-		}else {
-			System.out.println("CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_CHANGED_"+oldTable.toString());
-			return true;
-		}
-		 
-	}
-	
- 
+
 	
 	public int distanceVectorRouting() {
 		/**
@@ -189,13 +139,17 @@ public class RouteSim {
 		 */
 		
 		
-		while(NUM_OF_ITERATIONS!=5) {
+		while(convergenceCounter!=50) {
+			
+			//System.out.println("OLD TABLES INSIDE ALG");
+			//printDistanceTables();
 			for(Node n: topology) {
 				n.sendUpdate();
+				
 				//tablesChanged(50);
 			}
 			NUM_OF_ITERATIONS++;
-			
+			convergenceCounter++;
 			System.out.println("**************************************************"+NUM_OF_ITERATIONS);
 			System.out.println("**************************************************"+convergenceCounter);
 		}

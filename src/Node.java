@@ -9,6 +9,7 @@ public class Node {
 	private int[][] distanceTable;
 	private boolean anythingNew;
 	private HashMap<Integer, Integer> linkCost;
+	private int[][] ref;
 	//Variables-------------------------------------------
 	
 	/***
@@ -30,29 +31,28 @@ public class Node {
 	 * It modifies a row of the distance table of the receiver node to the vector inside the message.
 	 */
 	public void receiveUpdate(Message m) {
-		int[][] oldTable=this.distanceTable;
-		
-		System.out.println("before receiving");
-		System.out.println(Arrays.deepToString(oldTable));
+		boolean changed=false;
+		int[]oldvect = this.distanceTable[m.getSenderID()];
+		int[]newvect = m.getDistanceVector();
+		if(!Arrays.equals(oldvect,newvect)) {
+			System.out.println(oldvect.toString());
+			System.out.println(newvect.toString());
+			changed=true;
+		}
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
-		System.out.println("oldtable after edit");
-		System.out.println(Arrays.deepToString(oldTable));
-		
+	
 		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
-		process();
-		System.out.println("again "+Arrays.deepToString(oldTable));
 		
-		
-		if(Arrays.equals(oldTable, this.distanceTable)) {
-			System.out.println("nothing changed");
-			System.out.println(Arrays.deepToString(oldTable));
-			System.out.println(Arrays.deepToString(this.distanceTable));
+		if(process()||changed) {
+			//Table is updated
+			System.out.println("Node "+this.getNodeID()+"'s distance table is updated.");
+			//Will start counting for convergence from the beginning.
+			RouteSim.convergenceCounter=0;
 		}else {
-			System.out.println("CHANGE!");
+			System.out.println("Node "+this.getNodeID()+"'s distance table is not updated.");
 		}
 		
-		System.out.println("new table");
 		this.printDistanceTable();
 		
 
@@ -74,6 +74,7 @@ public class Node {
 				//System.out.println(Arrays.toString(distVect));
 				Message m = new Message(this.getNodeID(),n.getNodeID(),distVect);
 				System.out.println(m.toString());
+				
 				n.receiveUpdate(m);
 			}
 			return true;
@@ -96,7 +97,7 @@ public class Node {
 		boolean changed = false;
 		
 		for(int i = 0; i<distVect.length; i++) {
-			int pointer = 0;
+			//int pointer = 0;
 			int oldDist = distVect[i];
 			int newDist = 0;
 			for(int j = 0; j<distVect.length;j++) {
@@ -109,21 +110,22 @@ public class Node {
 				if(newDist<oldDist) {
 					distVect[i] = newDist;
 					oldDist = newDist;
-					changed = true;
+					
 				}
-				pointer ++;
+				//pointer ++;
 			}
 			
 		}
-		
-		this.getDistanceTable()[this.getNodeID()]=distVect;
-		if(changed) {
-			//this.sendUpdate();
+		int[]oldvect=this.getDistanceTable()[this.getNodeID()];
+		int[]newvect=distVect;
+		if(!Arrays.equals(oldvect, newvect)) {
+			changed=true;
 		}
-			
-	
+		this.getDistanceTable()[this.getNodeID()]=distVect;
 		
-		return false;
+	
+		//System.out.println("CHANGED VAR FROM PROCESS: "+changed);
+		return changed;
 	}
 
 	public HashMap<String, Integer> getForwardingTable() {
