@@ -30,10 +30,28 @@ public class Node {
 	 * It modifies a row of the distance table of the receiver node to the vector inside the message.
 	 */
 	public void receiveUpdate(Message m) {
+		int[][] oldTable=this.distanceTable;
+		
+		System.out.println("before receiving");
+		System.out.println(Arrays.deepToString(oldTable));
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
+		System.out.println("oldtable after edit");
+		System.out.println(Arrays.deepToString(oldTable));
+		
 		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
 		process();
+		System.out.println("again "+Arrays.deepToString(oldTable));
+		
+		
+		if(Arrays.equals(oldTable, this.distanceTable)) {
+			System.out.println("nothing changed");
+			System.out.println(Arrays.deepToString(oldTable));
+			System.out.println(Arrays.deepToString(this.distanceTable));
+		}else {
+			System.out.println("CHANGE!");
+		}
+		
 		System.out.println("new table");
 		this.printDistanceTable();
 		
@@ -102,7 +120,9 @@ public class Node {
 		if(changed) {
 			//this.sendUpdate();
 		}
-				
+			
+	
+		
 		return false;
 	}
 
