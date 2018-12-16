@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class RouteSim {
@@ -116,11 +117,33 @@ public class RouteSim {
 	}
 	
 	
-	public int distanceVectorRouting(Node from, Node destination) {
+	public boolean tablesSynced() {
+		int [][] prevDistTable = null;
+		for(Node n : topology) {
+			int [][] distTable = n.getDistanceTable();
+			
+			if(prevDistTable==null) {
+				prevDistTable = distTable;
+			}
+			if(!Arrays.deepEquals(prevDistTable, distTable)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public int distanceVectorRouting() {
 		/**
 		 * dxY  = min{cxv + dvy} --- d here is the min of the costs
 		 */
 		
+		
+		while(!tablesSynced()) {
+			for(Node n: topology) {
+				n.sendUpdate();
+			}
+		}
 		
 		
 		
@@ -136,6 +159,8 @@ public class RouteSim {
 		
 		return node.getLinkCost().get(neighbor.getNodeID());
 	}
+	
+	
 	
 	public int d(Node neighbor, Node destination) {
 		
