@@ -84,7 +84,7 @@ public class Node {
 			for(int j = 0; j<distVect.length;j++) {
 				
 				int c = distTable[this.getNodeID()][j];
-				int d = distTable[j][pointer];
+				int d = distTable[j][i];
 				
 				newDist = c+d;
 				
@@ -100,7 +100,7 @@ public class Node {
 		
 		this.getDistanceTable()[this.getNodeID()]=distVect;
 		if(changed) {
-			this.sendUpdate();
+			//this.sendUpdate();
 		}
 				
 		return false;
