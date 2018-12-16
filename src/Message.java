@@ -2,7 +2,6 @@ import java.util.Arrays;
 
 public class Message {
 	//Variables-------------------------------------------
-	private int VECTOR_SIZE;
 	private int[] distanceVector;
 	private int senderID;
 	private int receiverID;

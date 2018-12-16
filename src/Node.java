@@ -7,9 +7,7 @@ public class Node {
 	//Variables-------------------------------------------
 	private int nodeID;
 	private int[][] distanceTable;
-	private boolean anythingNew;
 	private HashMap<Integer, Integer> linkCost;
-	private int[][] ref;
 	//Variables-------------------------------------------
 	
 	/***
@@ -21,7 +19,6 @@ public class Node {
 	public Node(int nodeID, HashMap<Integer, Integer> linkCost, int tableSize) {
 		this.nodeID = nodeID;
 		this.linkCost = linkCost;
-		this.anythingNew = false;
 		this.distanceTable = new int[tableSize][tableSize];
 
 	}
@@ -35,14 +32,12 @@ public class Node {
 		int[]oldvect = this.distanceTable[m.getSenderID()];
 		int[]newvect = m.getDistanceVector();
 		if(!Arrays.equals(oldvect,newvect)) {
-			System.out.println(oldvect.toString());
-			System.out.println(newvect.toString());
 			changed=true;
 		}
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
 	
-		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
+		System.out.println("Message received: "+"Sender ID: "+m.getSenderID()+" Receiver ID: "+this.nodeID);
 		
 		if(process()||changed) {
 			//Table is updated
@@ -73,7 +68,7 @@ public class Node {
 				int[] distVect = this.getDistanceTable()[this.getNodeID()];
 				//System.out.println(Arrays.toString(distVect));
 				Message m = new Message(this.getNodeID(),n.getNodeID(),distVect);
-				System.out.println(m.toString());
+				System.out.println("Message sent to Node "+m.getReceiverID()+". Content: "+Arrays.toString(m.getDistanceVector()));
 				
 				n.receiveUpdate(m);
 			}

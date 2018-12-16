@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class RouteSim {
@@ -23,8 +22,8 @@ public class RouteSim {
 		//Main algorithm
 		this.createTopology();
 		this.initializeDistanceTables();
-		this.printDistanceTables();
-		System.out.println("Communication starts: ");
+		//this.printDistanceTables();
+		System.out.println("Simulation starts: ");
 		
 		distanceVectorRouting();
 		
@@ -101,9 +100,9 @@ public class RouteSim {
 				}
 			}
 		}
-		this.distanceTables= new HashMap<Integer,int[][]>();
+		distanceTables= new HashMap<Integer,int[][]>();
 		for(Node n: topology) {
-			this.distanceTables.put(n.getNodeID(),n.getDistanceTable());
+			distanceTables.put(n.getNodeID(),n.getDistanceTable());
 		}
 
 	}
@@ -139,7 +138,7 @@ public class RouteSim {
 		 */
 		
 		
-		while(convergenceCounter!=50) {
+		while(convergenceCounter!=5) {
 			
 			//System.out.println("OLD TABLES INSIDE ALG");
 			//printDistanceTables();
