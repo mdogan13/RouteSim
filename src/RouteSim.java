@@ -84,7 +84,14 @@ public class RouteSim {
 						distanceTable[i][j]=distance;
 					}else {
 						//System.out.println("i j in else are "+nodeID+" "+j);
-						distanceTable[i][j]=999;
+						
+						if(i==j) {
+							distanceTable[i][j]=0;
+						}
+						else {
+							distanceTable[i][j]=999;
+						}
+						
 					}
 
 				}
