@@ -34,6 +34,9 @@ public class Node {
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
 		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
 		process();
+		System.out.println("new table");
+		this.printDistanceTable();
+		
 
 	}
 
