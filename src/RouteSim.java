@@ -4,15 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class RouteSim {
 	static ArrayList<Node> topology;
 	String filename;
-	static int NUM_OF_ITERATIONS;
+	static int NUM_OF_ROUNDS=1;
 	static HashMap<Integer,int[][]> distanceTables;
-	static int convergenceCounter;
+
 
 	public RouteSim(String filename) {
 		this.filename=filename;
@@ -23,8 +22,8 @@ public class RouteSim {
 		//Main algorithm
 		this.createTopology();
 		this.initializeDistanceTables();
-		this.printDistanceTables();
-		System.out.println("Communication starts: ");
+		//this.printDistanceTables();
+		System.out.println("Simulation starts: ");
 		
 		distanceVectorRouting();
 		
@@ -101,9 +100,9 @@ public class RouteSim {
 				}
 			}
 		}
-		this.distanceTables= new HashMap<Integer,int[][]>();
+		distanceTables= new HashMap<Integer,int[][]>();
 		for(Node n: topology) {
-			this.distanceTables.put(n.getNodeID(),n.getDistanceTable());
+			distanceTables.put(n.getNodeID(),n.getDistanceTable());
 		}
 
 	}
@@ -133,48 +132,48 @@ public class RouteSim {
 	
 
 	
-	public int distanceVectorRouting() {
+	public void distanceVectorRouting() {
 		/**
 		 * dxY  = min{cxv + dvy} --- d here is the min of the costs
 		 */
 		
 		
-		while(convergenceCounter!=50) {
+		while(true) {
 			
-			//System.out.println("OLD TABLES INSIDE ALG");
-			//printDistanceTables();
+			int ctr =0;
+			System.out.println("************************************************** BEGINNING OF ROUND: "+NUM_OF_ROUNDS+" **************************************************");
 			for(Node n: topology) {
-				n.sendUpdate();
-				
-				//tablesChanged(50);
+				if(!n.sendUpdate()) {
+					
+					ctr++;
+				}
 			}
-			NUM_OF_ITERATIONS++;
-			convergenceCounter++;
-			System.out.println("**************************************************"+NUM_OF_ITERATIONS);
-			System.out.println("**************************************************"+convergenceCounter);
+			//System.out.println(ctr);
+			if(ctr==topology.size())break;
+			NUM_OF_ROUNDS++;
+
+			
+		
 		}
-		
-		
-		
-		return -1;
+		System.out.println("************************************************* TOTAL NUMBER OF ROUNDS: "+NUM_OF_ROUNDS+" *************************************************");
 	}
 	
-	/**
-	 * @param node
-	 * @param neighbor
-	 * @returns the distance between a node and its neighbor
-	 */
-	public int c(Node node, Node neighbor) {
-		
-		return node.getLinkCost().get(neighbor.getNodeID());
-	}
-	
-	
-	
-	public int d(Node neighbor, Node destination) {
-		
-		
-		return -1;
-	}
+//	/**
+//	 * @param node
+//	 * @param neighbor
+//	 * @returns the distance between a node and its neighbor
+//	 */
+//	public int c(Node node, Node neighbor) {
+//		
+//		return node.getLinkCost().get(neighbor.getNodeID());
+//	}
+//	
+//	
+//	
+//	public int d(Node neighbor, Node destination) {
+//		
+//		
+//		return -1;
+//	}
 	
 }

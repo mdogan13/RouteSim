@@ -7,11 +7,9 @@ public class Node {
 	//Variables-------------------------------------------
 	private int nodeID;
 	private int[][] distanceTable;
-	private boolean anythingNew;
 	private HashMap<Integer, Integer> linkCost;
-	private int[][] ref;
 	//Variables-------------------------------------------
-	
+
 	/***
 	 * 
 	 * @param nodeID
@@ -21,7 +19,6 @@ public class Node {
 	public Node(int nodeID, HashMap<Integer, Integer> linkCost, int tableSize) {
 		this.nodeID = nodeID;
 		this.linkCost = linkCost;
-		this.anythingNew = false;
 		this.distanceTable = new int[tableSize][tableSize];
 
 	}
@@ -31,30 +28,18 @@ public class Node {
 	 * It modifies a row of the distance table of the receiver node to the vector inside the message.
 	 */
 	public void receiveUpdate(Message m) {
-		boolean changed=false;
-		int[]oldvect = this.distanceTable[m.getSenderID()];
-		int[]newvect = m.getDistanceVector();
-		if(!Arrays.equals(oldvect,newvect)) {
-			System.out.println(oldvect.toString());
-			System.out.println(newvect.toString());
-			changed=true;
-		}
+
 		//If the message is coming from node 3, change 3rd row of the receiver's distance table.
 		this.distanceTable[m.getSenderID()]=m.getDistanceVector();
-	
-		System.out.println(this.nodeID+": Message received from "+m.getSenderID()+": "+m.toString());
-		
-		if(process()||changed) {
-			//Table is updated
-			System.out.println("Node "+this.getNodeID()+"'s distance table is updated.");
-			//Will start counting for convergence from the beginning.
-			RouteSim.convergenceCounter=0;
-		}else {
-			System.out.println("Node "+this.getNodeID()+"'s distance table is not updated.");
-		}
-		
+
+		System.out.println("Message received: "+"Sender ID: "+m.getSenderID()+" Receiver ID: "+this.nodeID);
+		//Update the receiver node's distance vector
+		process();
+		System.out.println("Node "+this.getNodeID()+"'s distance table is updated.");
+
+
 		this.printDistanceTable();
-		
+
 
 	}
 
@@ -63,69 +48,82 @@ public class Node {
 	 * @return
 	 */
 	public boolean sendUpdate() {
-		//temporary boolean for imitating convergence
-		boolean convergence = false;
-		
-		if(!convergence) {
-			
-			ArrayList<Node> neighbors = this.getNeighbors();
-			for(Node n: neighbors) {
-				int[] distVect = this.getDistanceTable()[this.getNodeID()];
-				//System.out.println(Arrays.toString(distVect));
-				Message m = new Message(this.getNodeID(),n.getNodeID(),distVect);
-				System.out.println(m.toString());
-				
-				n.receiveUpdate(m);
+
+		ArrayList<Node> neighbors = this.getNeighbors();
+		for(Node n: neighbors) {
+			int[] distVect = this.getDistanceTable()[this.getNodeID()];
+			//System.out.println(Arrays.toString(distVect));
+
+			Message m = new Message(this.getNodeID(),n.getNodeID(),distVect);
+			boolean needupdate=false;
+			int[]vecttosend = this.distanceTable[m.getSenderID()];
+			int[]vectofreceiver = n.getDistanceTable()[m.getSenderID()];
+
+			if(!Arrays.equals(vecttosend,vectofreceiver)) {
+				needupdate=true;
 			}
-			return true;
+			if(needupdate) {
+				System.out.println("Message sent to Node "+m.getReceiverID()+" Content: "+Arrays.toString(m.getDistanceVector()));
+				n.receiveUpdate(m);
+				return true;
+			}else {
+				System.out.print("Tried sending message to Node "+m.getReceiverID()+" from Node "+this.getNodeID()+" Content: "+Arrays.toString(m.getDistanceVector()));
+				System.out.println(". Node "+m.getReceiverID()+"'s distance table is not updated.");
+
+			}
+
 		}
-		
-		
+
+
+
+
 		return false;
 	}
-	
-	
+
+
 	/***
 	 * Processes the table after an update
 	 * @return
 	 */
-	public boolean process() {
-		
-		
+	public void process() {
+
+
 		int[][] distTable = this.getDistanceTable();
 		int[] distVect = this.getDistanceTable()[this.getNodeID()];
-		boolean changed = false;
-		
+		//boolean changed = false;
+
 		for(int i = 0; i<distVect.length; i++) {
-			//int pointer = 0;
+			
 			int oldDist = distVect[i];
 			int newDist = 0;
 			for(int j = 0; j<distVect.length;j++) {
-				
+
 				int c = distTable[this.getNodeID()][j];
 				int d = distTable[j][i];
-				
+
 				newDist = c+d;
-				
+
 				if(newDist<oldDist) {
 					distVect[i] = newDist;
 					oldDist = newDist;
-					
+
 				}
-				//pointer ++;
+				
 			}
-			
+
 		}
-		int[]oldvect=this.getDistanceTable()[this.getNodeID()];
-		int[]newvect=distVect;
-		if(!Arrays.equals(oldvect, newvect)) {
-			changed=true;
-		}
-		this.getDistanceTable()[this.getNodeID()]=distVect;
+//		int[]oldvect=this.getDistanceTable()[this.getNodeID()];
+//		int[]newvect=distVect;
+//		if(!Arrays.equals(oldvect, newvect)) {
+//			//changed=true;
+//		}
 		
-	
+		//Update the distance vector.
+		this.getDistanceTable()[this.getNodeID()]=distVect;
+
+
 		//System.out.println("CHANGED VAR FROM PROCESS: "+changed);
-		return changed;
+		//return changed;
 	}
 
 	public HashMap<String, Integer> getForwardingTable() {
@@ -134,15 +132,15 @@ public class Node {
 	}
 
 	// HELPER METHODS/GETTERS
-	
-	
+
+
 	/**
 	 * @returns the neighbors of the node in an ArrayList
 	 */
 	public ArrayList<Node> getNeighbors(){
-		
+
 		ArrayList<Node> neighbors = new ArrayList<Node>();
-		
+
 		for(Node n: RouteSim.topology) {
 			if(this.isNeighbor(n.getNodeID())) {
 				neighbors.add(n);
