@@ -99,10 +99,20 @@ public class Node {
 		return false;
 	}
 	
+	
+	/**
+	 * 
+	 * @param m
+	 */
 	public void processForwardingTable(Message m) {
 		updateForwardingPair(m.getSenderID(), m.getSenderID());
 	}
 	
+	/**
+	 * 
+	 * @param destination
+	 * @param hop
+	 */
 	public void updateForwardingPair(int destination, int hop) {
 		for(int i=0; i<forwardingPairs.length;i++) {
 			if(forwardingPairs[i].destination == destination) {
@@ -213,16 +223,21 @@ public class Node {
 	class ForwardingPair{
 		int destination;
 		int hop;
+		/**
+		 * 
+		 * @param i
+		 * @param j
+		 */
 		ForwardingPair(int i, int j){
 			destination = i;
 			hop = j;
 		}
+		/**
+		 * ToString()
+		 */
 		public String toString(){
 			String str = "";
-			
 			str+= "["+destination+"  "+hop+"]";
-			
-			
 			return str;
 		}
 	}
