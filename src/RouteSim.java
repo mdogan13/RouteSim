@@ -141,7 +141,7 @@ public class RouteSim {
 		while(true) {
 			
 			int ctr =0;
-			System.out.println("************************************************** BEGINNING OF ROUND: "+NUM_OF_ROUNDS);
+			System.out.println("************************************************** BEGINNING OF ROUND: "+NUM_OF_ROUNDS+" **************************************************");
 			for(Node n: topology) {
 				if(!n.sendUpdate()) {
 					
@@ -155,7 +155,7 @@ public class RouteSim {
 			
 		
 		}
-		System.out.println("************************************************** TOTAL NUMBER OF ROUNDS: "+NUM_OF_ROUNDS);
+		System.out.println("************************************************* TOTAL NUMBER OF ROUNDS: "+NUM_OF_ROUNDS+" *************************************************");
 	}
 	
 //	/**

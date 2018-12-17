@@ -67,7 +67,8 @@ public class Node {
 				n.receiveUpdate(m);
 				return true;
 			}else {
-				System.out.println("Node "+m.getReceiverID()+"'s distance table is not updated.");
+				System.out.print("Tried sending message to Node "+m.getReceiverID()+" from Node "+this.getNodeID()+" Content: "+Arrays.toString(m.getDistanceVector()));
+				System.out.println(". Node "+m.getReceiverID()+"'s distance table is not updated.");
 
 			}
 
