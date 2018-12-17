@@ -25,7 +25,7 @@ public class Node {
 		
 		
 		for(int i = 0; i<tableSize;i++) {
-			ForwardingPair pair = new ForwardingPair(i,0);
+			ForwardingPair pair = new ForwardingPair(i,i);
 			if(nodeID==i) {
 				//same
 			}else {
@@ -92,10 +92,6 @@ public class Node {
 			}
 
 		}
-
-
-
-
 		return false;
 	}
 	
@@ -122,7 +118,8 @@ public class Node {
 		}
 	}
 
-
+	
+	
 	/***
 	 * Processes the table after an update
 	 * @return
