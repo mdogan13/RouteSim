@@ -8,6 +8,7 @@ public class Node {
 	private int nodeID;
 	private int[][] distanceTable;
 	private HashMap<Integer, Integer> linkCost;
+	public ForwardingPair[] forwardingPairs;
 	//Variables-------------------------------------------
 
 	/***
@@ -20,6 +21,19 @@ public class Node {
 		this.nodeID = nodeID;
 		this.linkCost = linkCost;
 		this.distanceTable = new int[tableSize][tableSize];
+		forwardingPairs= new ForwardingPair[tableSize];
+		
+		
+		for(int i = 0; i<tableSize;i++) {
+			ForwardingPair pair = new ForwardingPair(i,0);
+			if(nodeID==i) {
+				//same
+			}else {
+				pair = new ForwardingPair(i,-1);
+			}
+			
+			forwardingPairs[i] = pair;
+		}
 
 	}
 
@@ -34,9 +48,14 @@ public class Node {
 
 		System.out.println("Message received: "+"Sender ID: "+m.getSenderID()+" Receiver ID: "+this.nodeID);
 		//Update the receiver node's distance vector
+		processForwardingTable(m);
 		process();
 		System.out.println("Node "+this.getNodeID()+"'s distance table is updated.");
-
+		
+		System.out.println("ForwardingTable:");
+		for(int i=0; i<distanceTable.length;i++) {
+			System.out.println(forwardingPairs[i].toString());
+		}
 
 		this.printDistanceTable();
 
@@ -79,6 +98,19 @@ public class Node {
 
 		return false;
 	}
+	
+	public void processForwardingTable(Message m) {
+		updateForwardingPair(m.getSenderID(), m.getSenderID());
+	}
+	
+	public void updateForwardingPair(int destination, int hop) {
+		for(int i=0; i<forwardingPairs.length;i++) {
+			if(forwardingPairs[i].destination == destination) {
+				ForwardingPair pair = new ForwardingPair(destination, hop);
+				forwardingPairs[i] = pair;
+			}
+		}
+	}
 
 
 	/***
@@ -106,6 +138,7 @@ public class Node {
 				if(newDist<oldDist) {
 					distVect[i] = newDist;
 					oldDist = newDist;
+					updateForwardingPair(i, j);
 
 				}
 				
@@ -126,8 +159,8 @@ public class Node {
 		//return changed;
 	}
 
-	public HashMap<String, Integer> getForwardingTable() {
-		HashMap<String, Integer> ftable = new HashMap<String, Integer>();
+	public HashMap<String, String>getForwardingTable() {
+		HashMap<String, String> ftable = new HashMap<String, String>();
 		return ftable;
 	}
 
@@ -172,4 +205,26 @@ public class Node {
 		System.out.println(
 				Arrays.deepToString(distanceTable).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
 	}
+	
+	
+	
+	
+	//**************************
+	class ForwardingPair{
+		int destination;
+		int hop;
+		ForwardingPair(int i, int j){
+			destination = i;
+			hop = j;
+		}
+		public String toString(){
+			String str = "";
+			
+			str+= "["+destination+"  "+hop+"]";
+			
+			
+			return str;
+		}
+	}
+	
 }

@@ -122,11 +122,15 @@ public class RouteSim {
 	}
 
 	public void printDistanceTables() {
-		System.out.println("Distance tables: ");
+		System.out.println("Distance tables and Forwarding Pairs: ");
 		for(Node n: topology) {
 			System.out.println("Node "+n.getNodeID()+":");
 			n.printDistanceTable();
 			System.out.println(" ");
+			for(int i=0; i<n.forwardingPairs.length;i++) {
+					System.out.println(n.forwardingPairs[i].toString());
+			}
+		
 		}
 	}
 	
